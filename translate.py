@@ -39,16 +39,20 @@ def merge_translations(existing_codelist_filename, output_filename, new_translat
 
     for one_code in codes:
         the_code = codelist_xml.xpath("/codelist/codelist-items/codelist-item[code/text()='{}']".format(one_code["code"]))[0]
-        new_name = the_code.find('name/narrative[@xml:lang="{}"]'.format(lang), namespaces=nsmap)
-        if new_name is None:
-            new_name = etree.SubElement(the_code.find('name'), "narrative")
-            new_name.set('{http://www.w3.org/XML/1998/namespace}lang', lang)
-        new_name.text = one_code["name"]
-        new_description = the_code.find('description/narrative[@xml:lang="{}"]'.format(lang), namespaces=nsmap)
-        if new_description is None:
-            new_description = etree.SubElement(the_code.find('description'), "narrative")
-            new_description.set('{http://www.w3.org/XML/1998/namespace}lang', lang)
-        new_description.text = one_code["description"]
+
+        if one_code["name"]:
+            new_name = the_code.find('name/narrative[@xml:lang="{}"]'.format(lang), namespaces=nsmap)
+            if new_name is None:
+                new_name = etree.SubElement(the_code.find('name'), "narrative")
+                new_name.set('{http://www.w3.org/XML/1998/namespace}lang', lang)
+            new_name.text = one_code["name"]
+
+        if one_code["description"]:
+            new_description = the_code.find('description/narrative[@xml:lang="{}"]'.format(lang), namespaces=nsmap)
+            if new_description is None:
+                new_description = etree.SubElement(the_code.find('description'), "narrative")
+                new_description.set('{http://www.w3.org/XML/1998/namespace}lang', lang)
+            new_description.text = one_code["description"]
 
     codelist_xml_file = open(output_filename, "w")
     codelist_xml_file.write(
