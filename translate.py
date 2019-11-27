@@ -17,6 +17,25 @@ def get_text(element):
     return element.text
 
 
+# Thanks to https://infix.se/2007/02/06/gentlemen-indent-your-xml
+def indent(elem, level=0):
+    """Ensures the file is still indented with 4 spaces, as all
+    the existing codelist files are."""
+    i = "\n" + level*"    "
+    if len(elem):
+        if not elem.text or not elem.text.strip():
+            elem.text = i + "    "
+        for e in elem:
+            indent(e, level+1)
+            if not e.tail or not e.tail.strip():
+                e.tail = i + "    "
+        if not e.tail or not e.tail.strip():
+            e.tail = i
+    else:
+        if level and (not elem.tail or not elem.tail.strip()):
+            elem.tail = i
+
+
 @click.group()
 def main():
    pass
@@ -54,10 +73,10 @@ def merge_translations(existing_codelist_filename, output_filename, new_translat
                 new_description.set('{http://www.w3.org/XML/1998/namespace}lang', lang)
             new_description.text = one_code["description"]
 
-    codelist_xml_file = open(output_filename, "w")
-    codelist_xml_file.write(
-        minidom.parseString(etree.tostring(codelist_xml)).toprettyxml(indent="    ")
-    )
+    indent(codelist_xml.getroot())
+    outf = open(output_filename, 'w')
+    outf.write(etree.tostring(codelist_xml, encoding="unicode"))
+    outf.close()
 
 
 @main.command()
@@ -80,7 +99,7 @@ def generate_translations(existing_codelist_filename, output_filename, lang):
         sheet.write(i+1, 0, get_text(code.find('code')))
         sheet.write(i+1, 1, get_text(code.find('name/narrative[@xml:lang="{}"]'.format(lang), namespaces=nsmap)))
         sheet.write(i+1, 2, get_text(code.find('description/narrative[@xml:lang="{}"]'.format(lang), namespaces=nsmap)))
-    wb.save(output_filename)
+    wb.save(output_filename, "utf-8")
 
 
 if __name__ == '__main__':
