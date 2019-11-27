@@ -4,7 +4,11 @@ This repository contains a helper script to support translation of replicated co
 
 ## Installation
 
-1. Clone the repository and set up a pyenv:
+1. Clone the repository:
+   ```
+   git clone git@github.com:codeforIATI/translate-codelists.git
+   ```
+2. Set up a virtualenv and install dependencies:
    ```
    virtualenv ./pyenv
    pip install -r requirements.txt
@@ -17,6 +21,7 @@ This repository contains a helper script to support translation of replicated co
    * `--existing_codelist_filename`: The filename of the existing XML codelists file, e.g. 'Sector.xml'.
    * `--output_filename`: The output filename of the Excel translations into the desired language.
    * `--lang`: The language of the translations file in lowercase, e.g. 'fr' for French.
+
    Example:
    ```
    python translate.py generate-translations --existing_codelist_filename="Sector.xml" --output_filename="Sector_FR.xls" --lang="fr"
@@ -30,6 +35,7 @@ This repository contains a helper script to support translation of replicated co
    * `--output_filename`: The output filename of the new XML codelists file incorporating the translations.
    * `--new_translation_filename`: The filename of the Excel translation of the existing codelists file.
    * `--lang`: The language of the translations file in lowercase, e.g. 'fr' for French.
+
    Example:
    ```
    python translate.py merge-translations --existing_codelist_filename="Sector.xml" --output_filename="Sector_FR.xml" --new_translation_filename="Sector_FR.xls" --lang="fr"
