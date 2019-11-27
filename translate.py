@@ -75,7 +75,7 @@ def merge_translations(existing_codelist_filename, output_filename, new_translat
 
     indent(codelist_xml.getroot())
     outf = open(output_filename, 'w')
-    outf.write(etree.tostring(codelist_xml, encoding="unicode"))
+    outf.write("{}\n".format(etree.tostring(codelist_xml, encoding="unicode")))
     outf.close()
 
 
